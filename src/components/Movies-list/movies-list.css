@@ -1,0 +1,29 @@
+.movies-list {
+  display: flex;
+  justify-content: center;
+  margin: 34px auto;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1009px) {
+  .movies-list {
+    flex-direction: column;
+    align-items:center;
+  }
+}
+
+@media (max-width: 525px) {
+  .movies-list {
+    margin: 10px auto 17px auto; 
+  }
+}
+
+
+/* Стили для индикатора загрузки*/
+
+.spinner-container {
+  width: 100%;
+  text-align: center;
+}
+
+

@@ -1,0 +1,194 @@
+.movieItem {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 454px; 
+    box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
+}  
+
+.movieItem:nth-child(n) {
+    margin-bottom: 35px;
+}
+
+.movieItem:nth-child(n + 5) {
+    margin-bottom: 0px;
+}
+
+.movieItem:nth-child(2n) {
+    margin-left: 30px; 
+} 
+
+.movieItem_content {
+    order: 1;
+}
+
+.movieItem_content .movieItem_title {
+    margin-left: 20px;
+    margin-bottom: 7px;
+    font-size: 20px; 
+    line-height: 28px; 
+    width: 210px;
+}
+
+.movieItem_content .movieItem_data {
+    color: #827E7E;
+    font-size: 12px;
+    line-height: 22px;
+    margin-left: 20px;
+    margin-bottom: 7px;
+}
+
+.movieItem_content .movieItem_text {
+    margin-top: 0px; /*  изменил */
+    margin-left: 20px;
+    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 22px;
+    text-align: justify;
+    width: 228px;
+}
+
+.movieItem_content .movieItem_genre {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 20px;
+    margin-bottom: 7px;
+}
+
+.movieItem_content .movieItem_genre .badge {
+    background-color: #FAFAFA;
+    color: rgba(0, 0, 0, 0.65);;
+    border: 1px solid #D9D9D9;
+    border-radius: 2px;
+    margin-right: 8px;
+    font-size: 12px;
+    font-size: 12px;
+    line-height: 15px;
+    margin-bottom: 8px;
+}
+
+.badge-text {
+    margin-bottom: 0px;
+}
+
+.movieItem_figure {
+    order: -1;
+    height: 100%;
+    width: 183px;
+}
+
+.movieItem_figure .poster {
+    height: 100%;
+    width: 183px;
+}
+.rate {
+    margin-left: 15px;
+}
+
+.rate, .ant-rate, .ant-rate-star, .radio {
+    /* margin-left: 20px; */
+    height: 46px;
+    text-align: center;
+}
+
+.rate .ant-rate {
+    padding: 0 5px;
+}
+
+.ant-rate-star:not(:last-child) {
+    margin-right: 4px !important;
+}
+
+.vote-average {
+    position: absolute;
+    top: 12px;
+    right: 9px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50px 50px 50px 50px;
+    text-align: center;
+}
+
+.vote-average span{
+    vertical-align: middle;
+    line-height: 22px;  
+    font-size: 12px;  
+}
+
+.vote-average-ratingRed {
+    border: 1px solid #E90000;
+}
+
+.vote-average-ratingOrange {
+    border: 1px solid #E97E00;
+}
+
+.vote-average-ratingYellow {
+    border: 1px solid #E9D100;
+}
+
+.vote-average-ratingGreen {
+    border: 1px solid #66E900;
+}
+
+
+
+@media (max-width: 1009px) {
+
+    .movieItem:nth-child(2n) {
+        margin-left: 0;
+    }
+
+    .movieItem:nth-last-of-type(n + 2) {
+        margin-bottom: 35px;
+    }
+    
+}
+
+@media (max-width: 525px) {
+    .movieItem {
+        width: 387px;
+        height: 100%;
+    }
+
+    .movieItem:nth-last-of-type(n + 2) {
+        margin-bottom: 20px;
+    }
+    
+    .movieItem_content .movieItem_title {
+        margin-left: 13px;
+    }
+
+    .movieItem_content .movieItem_data {
+        margin-left: 13px;
+    }
+
+    .movieItem_content .movieItem_text {
+        position: relative;
+        vertical-align: top;   
+        margin-top: 0px; /* изменил */
+        margin-left: -57px;
+        width: 367px;
+    }
+
+    .rate {
+        position: relative;
+        text-align: end;
+    }
+
+    .movieItem_content .movieItem_genre {
+        margin-left: 13px;
+    }
+
+    .movieItem_figure {
+        margin-left: 10px;
+        margin-top: 6px;
+        height: 91px;
+        width: 60px;
+    }
+    .movieItem_figure .poster {
+        height: 91px;
+        width: 60px;
+    }
+
+}

@@ -1,0 +1,49 @@
+html {
+  box-sizing: border-box;
+  font-family: "TT Lakes", "Comic", sans-serif;
+  margin: 0 auto;
+}
+
+body {
+  min-width: 420px;
+  max-width: 1390px;
+  margin: 0 auto;
+}
+
+.pagination {
+  display: block;
+  text-align: center;
+  margin: 36px auto;
+}
+
+.ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link {
+  border: none !important;  
+  outline: none !important;  
+}
+
+.anticon, .anticon-left, .anticon-rigth {
+  line-height: 32px !important;
+  vertical-align: top !important;
+}
+
+.ant-pagination-item { 
+  background-color: none !important;
+  border: none !important;
+  color: black !important;
+   font-size: 12px !important; 
+
+}
+
+.ant-pagination-item-active {
+  font-weight: 500 !important; 
+  background: #1890ff !important;
+  border-color: #1890ff !important;
+  border-radius: 4px !important;
+  color: white !important;
+}
+
+@media (max-width: 525px) {
+  .pagination {
+      margin: 21px auto;  
+  }
+}
