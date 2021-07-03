@@ -20,6 +20,8 @@
 
 .movieItem_content {
     order: 1;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .movieItem_content .movieItem_title {
@@ -71,6 +73,10 @@
     margin-bottom: 0px;
 }
 
+.disabled {
+    pointer-events: none; 
+}
+
 .movieItem_figure {
     order: -1;
     height: 100%;
@@ -81,6 +87,12 @@
     height: 100%;
     width: 183px;
 }
+.rate-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
+}
+
 .rate {
     margin-left: 15px;
 }

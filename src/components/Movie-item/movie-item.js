@@ -16,7 +16,8 @@ export default class MovieItem extends Component {
     static defaultProps = {
         sendMoveRatingItem: () => {},
         rating: [],
-        poster_path: this.noMoviePoster
+        poster_path: this.noMoviePoster,
+        release_date: ''
     };
 
     static propTypes = {
@@ -25,7 +26,7 @@ export default class MovieItem extends Component {
         genre_ids: PropTypes.arrayOf(PropTypes.number).isRequired,
         poster_path: PropTypes.string,
         overview: PropTypes.string.isRequired,
-        release_date: PropTypes.string.isRequired,
+        release_date: PropTypes.string,
         original_title: PropTypes.string.isRequired,
         vote_average: PropTypes.number.isRequired,
         id: PropTypes.number.isRequired,
@@ -90,14 +91,18 @@ export default class MovieItem extends Component {
                     (genresList) => (
                         <div className="movieItem">
                             <div className="movieItem_content">
-                                <h1 className="movieItem_title">{originalTitle}</h1>
-                                <p className="movieItem_data">{newFormatData}</p>
-                                <div className="movieItem_genre">
-                                    <GenresMoviesItem genresMovie={this.setMovieGenre(genreIds, genresList)} />
+                                <div className='content-container'>
+                                    <h1 className="movieItem_title">{originalTitle}</h1>
+                                    <p className="movieItem_data">{newFormatData}</p>
+                                    <div className="movieItem_genre">
+                                        <GenresMoviesItem genresMovie={this.setMovieGenre(genreIds, genresList)} />
+                                    </div>
+                                    <p className="movieItem_text">{newText}</p>
                                 </div>
-                                <p className="movieItem_text">{newText}</p>
-                                <div className='rate'>
-                                    <Rate count={10} allowHalf value={newRating} onChange = {this.moveRatingItem} />
+                                <div className='rate-container'>
+                                    <div className='rate'>
+                                        <Rate count={10} allowHalf value={newRating} onChange = {this.moveRatingItem} />
+                                    </div> 
                                 </div>
                                 <div className={classVoteAverage} >
                                     <span>{voteAverage}</span>
@@ -118,7 +123,7 @@ const GenresMoviesItem = ({ genresMovie }) => {
 
     const genresCard = genresMovie.map((item) => (
         
-        <a className="badge" href="/" key={item} >
+        <a className="badge disabled" href="/" key={item} >
             <p className="badge-text">{item}</p>
         </a>
     )) 

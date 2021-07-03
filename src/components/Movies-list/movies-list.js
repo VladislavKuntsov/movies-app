@@ -41,6 +41,7 @@ export default class MoviesList extends Component {
                 description="The search has not given any results!"
                 type="info"
             />: null
+            
         const errorMessadgeRated = switchSearchRate ?
             < Alert
                 description="You have no rated films!"

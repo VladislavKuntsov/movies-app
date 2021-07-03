@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Pagination as Pagin } from 'antd';
 import MoviesList from '../Movies-list/movies-list';
-import SwapiServies from '../Services/swipe-services';
+import SwapiServies from '../../Services/swipe-services';
 import Switch from '../Switch/switch';
+import SearchBar from '../Search-bar/Search-bar';
 
 import 'antd/dist/antd.css';
 import './app.css';
@@ -12,7 +13,7 @@ const MovieDBService = new SwapiServies();
 export const {
     Provider: GenresProvider,
     Consumer: GenresConsumer,
-} = React.createContext(); // создаем поставщика и потребителя
+} = React.createContext(); 
 
 export default class App extends Component {
 
@@ -24,22 +25,24 @@ export default class App extends Component {
         ratingMovies: [],
         loading: true,
         error: false,
-        term: '',
+        term: 'Tom',
         page: '1',
         switchSearchRate: false,
     }
 
     componentDidMount() {
+        const {term} =this.state
+
         this.setQuestSession();
-        this.setMovies();
+        this.setMovies(term);
         this.setMoviesGenres();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {page} = this.state
+        const {term, page} = this.state
 
-        if (page !== prevState.page) {
-            this.setMovies(page);
+        if (term !== prevState.term || page !== prevState.page) {
+            this.setMovies(term, page);
         }
     }
 
@@ -50,8 +53,8 @@ export default class App extends Component {
         })
     }  
 
-    setMovies(page) {
-        MovieDBService.getAllMovies(page)
+    setMovies(search, page) {
+        MovieDBService.getAllMovies(search, page)
         .then((body) => {
             const movies = body.results.slice(0, 6);
             
@@ -91,7 +94,16 @@ export default class App extends Component {
     }
 
     onSearchChange = (term) => {
-        this.setState({term})
+        let newTerm = term;
+
+        if(newTerm === '') {
+            newTerm = 'Tom'
+        }
+
+        this.setState({
+            term: newTerm,
+            page: '1'
+        })
     }
 
     onPaginClick = (pages) => {
@@ -147,25 +159,21 @@ export default class App extends Component {
         MovieDBService.postSendMoviesRating(guestSessionId, movieId, rating)
     }
 
-    searchMovies(items, term) {
-
-        if (term.length === 0) return items;
-
-        return items.filter((item) => item.original_title.indexOf(term) > -1)
-    }
-
     render() {
-        const { moviesList, moviesListRating, genresList, loading, error, term, switchSearchRate, ratingMovies, page} = this.state;
-        const visibleMovies = switchSearchRate ? this.ratedMovies(page, moviesListRating) : this.searchMovies(moviesList, term);
+        const { moviesList, moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page} = this.state;
+        const visibleMovies = switchSearchRate ? this.ratedMovies(page, moviesListRating) : moviesList;
 
         return (
             <GenresProvider value={genresList}>
                 <div>
                     <Switch
-                        onSearchChange={this.onSearchChange} 
                         onRate={this.onRate}
                         onSearch={this.onSearch}
                         switchSearchRate = {switchSearchRate} 
+                    />
+                    <SearchBar 
+                    onSearchChange={this.onSearchChange}
+                    switchSearchRate = {switchSearchRate} 
                     />
                     <MoviesList
                         movies={visibleMovies}

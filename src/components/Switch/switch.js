@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'lodash.debounce';
 import './switch.css';
 
 export default class Switch  extends Component {
-
-    state = {
-        term: ''
-    }
 
     static defaultProps = {
         onRate: () => {},
@@ -24,13 +19,10 @@ export default class Switch  extends Component {
 
     onSearchChange = (event) => {
         const newTerm = event.target.value;
-        
-        this.setState({term: newTerm});
 
-        const {term} = this.state;
         const {onSearchChange} = this.props;
 
-        onSearchChange(term);
+        onSearchChange(newTerm);
     } 
 
     render() {
@@ -41,8 +33,6 @@ export default class Switch  extends Component {
 
         const classNameSearch = switchSearchRate ? 'sort-panel_search' : 'sort-panel_search active-border';
         const classNameRated = !switchSearchRate ? 'sort-panel_rated' : 'sort-panel_rated active-border';
-
-        const classNameSearchBoxHide = !switchSearchRate ? 'search-box' : 'hide';
 
         return (
             <div className='container-sorting'>
@@ -57,17 +47,7 @@ export default class Switch  extends Component {
                             <span className={classNamesRatedSpan}>Rated</span>
                         </p>
                     </div>
-                </div>  
-                <div className={classNameSearchBoxHide}>
-                    <form className='form-search'>
-                        <input 
-                            className="input-search" 
-                            type="text" 
-                            placeholder="Type to search..." 
-                            onChange = {debounce(this.onSearchChange, 500)} 
-                        />
-                    </form>  
-                </div>       
+                </div>      
             </div>  
         )
     }
