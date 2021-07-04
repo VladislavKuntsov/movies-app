@@ -1,1 +1,1 @@
-Production: https://movies-app-blush.vercel.app
+Preview: https://movies-app-vladislavkuntsov.vercel.app

@@ -24,16 +24,15 @@ export default class Switch extends Component {
     onSearchChange(newTerm);
   };
 
-
   render() {
     const { onRate, onSearch, switchSearchRate } = this.props;
 
     const classSwitch = {
-        classNamesSearchSpan: !switchSearchRate ? 'active' : null,
-        classNamesRatedSpan: switchSearchRate ? 'active' : null,
-        classNameSearch: switchSearchRate ? 'sort-panel_search' : 'sort-panel_search active-border',
-        classNameRated: !switchSearchRate ? 'sort-panel_rated' : 'sort-panel_rated active-border',  
-    }
+      classNamesSearchSpan: !switchSearchRate ? 'active' : null,
+      classNamesRatedSpan: switchSearchRate ? 'active' : null,
+      classNameSearch: switchSearchRate ? 'sort-panel_search' : 'sort-panel_search active-border',
+      classNameRated: !switchSearchRate ? 'sort-panel_rated' : 'sort-panel_rated active-border',
+    };
 
     return (
       <div className="container-sorting">
