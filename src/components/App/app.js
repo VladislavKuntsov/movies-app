@@ -10,190 +10,171 @@ import './app.css';
 
 const MovieDBService = new SwapiServies();
 
-export const {
-    Provider: GenresProvider,
-    Consumer: GenresConsumer,
-} = React.createContext(); 
+export const { Provider: GenresProvider, Consumer: GenresConsumer } = React.createContext();
 
 export default class App extends Component {
+  state = {
+    guestSessionId: null,
+    moviesList: [],
+    moviesListRating: [],
+    genresList: [],
+    ratingMovies: [],
+    loading: true,
+    error: false,
+    term: 'Tom',
+    page: '1',
+    switchSearchRate: false,
+  };
 
-    state = {
-        guestSessionId: null,
-        moviesList: [],
-        moviesListRating: [],
-        genresList: [],
-        ratingMovies: [],
-        loading: true,
-        error: false,
-        term: 'Tom',
-        page: '1',
-        switchSearchRate: false,
+  componentDidMount() {
+    const { term } = this.state;
+
+    this.setQuestSession();
+    this.setMovies(term);
+    this.setMoviesGenres();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { term, page } = this.state;
+
+    if (term !== prevState.term || page !== prevState.page) {
+      this.setMovies(term, page);
     }
+  }
 
-    componentDidMount() {
-        const {term} =this.state
+  setQuestSession() {
+    MovieDBService.getCreateQuestSession().then((body) => {
+      this.setState({ guestSessionId: body.guest_session_id });
+    });
+  }
 
-        this.setQuestSession();
-        this.setMovies(term);
-        this.setMoviesGenres();
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const {term, page} = this.state
-
-        if (term !== prevState.term || page !== prevState.page) {
-            this.setMovies(term, page);
-        }
-    }
-
-    setQuestSession() {
-        MovieDBService.getCreateQuestSession()
-        .then((body) => {
-            this.setState({guestSessionId: body.guest_session_id}) 
-        })
-    }  
-
-    setMovies(search, page) {
-        MovieDBService.getAllMovies(search, page)
-        .then((body) => {
-            const movies = body.results.slice(0, 6);
-            
-            this.setState({
-                moviesList: movies,
-                loading: false,
-            })
-        })
-        .catch(this.onError)
-    }
-
-    setMovieRated(guestSessionId) {
-        MovieDBService.getMovieRated(guestSessionId)
-        .then((body) => {
-            this.setState({moviesListRating: body.results}) 
-        })
-    }
-
-    setMoviesGenres() {
-        MovieDBService.getAllGenres()
-        .then((body) => {
-            this.setState({genresList: body.genres})
-        })
-    }
-
-    onError = () => {
-        this.setState({
-            error: true,
-            loading: false,
-        })
-    }
-
-    ratedMovies = (page, moviesListRating) => {
-        const movie = moviesListRating.filter((item, index) => index >= page * 6 - 6 && index < page * 6 )
-
-        return movie
-    }
-
-    onSearchChange = (term) => {
-        let newTerm = term;
-
-        if(newTerm === '') {
-            newTerm = 'Tom'
-        }
+  setMovies(search, page) {
+    MovieDBService.getAllMovies(search, page)
+      .then((body) => {
+        const movies = body.results.slice(0, 6);
 
         this.setState({
-            term: newTerm,
-            page: '1'
-        })
+          moviesList: movies,
+          loading: false,
+        });
+      })
+      .catch(this.onError);
+  }
+
+  setMovieRated(guestSessionId) {
+    MovieDBService.getMovieRated(guestSessionId).then((body) => {
+      this.setState({ moviesListRating: body.results });
+    });
+  }
+
+  setMoviesGenres() {
+    MovieDBService.getAllGenres().then((body) => {
+      this.setState({ genresList: body.genres });
+    });
+  }
+
+  onError = () => {
+    this.setState({
+      error: true,
+      loading: false,
+    });
+  };
+
+  ratedMovies = (page, moviesListRating) => {
+    const movie = moviesListRating.filter((item, index) => index >= page * 6 - 6 && index < page * 6);
+
+    return movie;
+  };
+
+  onSearchChange = (term) => {
+    let newTerm = term;
+
+    if (newTerm === '') {
+      newTerm = 'Tom';
     }
 
-    onPaginClick = (pages) => {
-        this.setState({page: String(pages)});
-    }
+    this.setState({
+      term: newTerm,
+      page: '1',
+    });
+  };
 
-    sendMoveRatingItem = (rating, movieId) => {
-        const {guestSessionId} = this.state;
+  onPaginClick = (pages) => {
+    this.setState({ page: String(pages) });
+  };
 
-        this.postSendMoviesRating(guestSessionId, movieId, rating); 
+  sendMoveRatingItem = (rating, movieId) => {
+    const { guestSessionId } = this.state;
 
-        const movieRating = {
-                id: movieId,
-                rating,
-        }
+    this.postSendMoviesRating(guestSessionId, movieId, rating);
 
-        this.setState(({ ratingMovies }) => {
+    const movieRating = {
+      id: movieId,
+      rating,
+    };
 
-            if(ratingMovies.length === 0) {
-                return {
-                    ratingMovies: [movieRating],
-                }
-            }
+    this.setState(({ ratingMovies }) => {
+      if (ratingMovies.length === 0) {
+        return {
+          ratingMovies: [movieRating],
+        };
+      }
 
-            const newMoviesRating = ratingMovies.filter(item=> item.id !== movieId)   
+      const newMoviesRating = ratingMovies.filter((item) => item.id !== movieId);
 
-            const newRatingMovies = [...newMoviesRating, movieRating]
+      const newRatingMovies = [...newMoviesRating, movieRating];
 
-            return {
-                ratingMovies: newRatingMovies,
-            }
-        })   
-    }
+      return {
+        ratingMovies: newRatingMovies,
+      };
+    });
+  };
 
-    onRate = () => {
-        const {guestSessionId} = this.state;
+  onRate = () => {
+    const { guestSessionId } = this.state;
 
-        this.setMovieRated(guestSessionId);
-        this.setState({
-            switchSearchRate: true,
-            page:'1'
-        })
-    }
+    this.setMovieRated(guestSessionId);
+    this.setState({
+      switchSearchRate: true,
+      page: '1',
+    });
+  };
 
-    onSearch = () => {
-        this.setState({
-            switchSearchRate: false,
-            page:'1'
-        })
-    }
+  onSearch = () => {
+    this.setState({
+      switchSearchRate: false,
+      page: '1',
+    });
+  };
 
-    postSendMoviesRating(guestSessionId, movieId, rating) {
-        MovieDBService.postSendMoviesRating(guestSessionId, movieId, rating)
-    }
+  postSendMoviesRating(guestSessionId, movieId, rating) {
+    MovieDBService.postSendMoviesRating(guestSessionId, movieId, rating);
+  }
 
-    render() {
-        const { moviesList, moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page} = this.state;
-        const visibleMovies = switchSearchRate ? this.ratedMovies(page, moviesListRating) : moviesList;
+  render() {
+    const { moviesList, moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page } =
+      this.state;
+    const visibleMovies = switchSearchRate ? this.ratedMovies(page, moviesListRating) : moviesList;
 
-        return (
-            <GenresProvider value={genresList}>
-                <div>
-                    <Switch
-                        onRate={this.onRate}
-                        onSearch={this.onSearch}
-                        switchSearchRate = {switchSearchRate} 
-                    />
-                    <SearchBar 
-                    onSearchChange={this.onSearchChange}
-                    switchSearchRate = {switchSearchRate} 
-                    />
-                    <MoviesList
-                        movies={visibleMovies}
-                        rating = {ratingMovies}
-                        loadingIndicator={loading}
-                        error={error}
-                        sendMoveRatingItem={this.sendMoveRatingItem}
-                        switchSearchRate={switchSearchRate}
-                        moviesListRating={moviesListRating}
-                    />
-                    <div className='pagination' >
-                        <Pagin
-                            defaultCurrent={1} 
-                            current={Number(page)} 
-                            total={50}
-                            onChange={this.onPaginClick}
-                        />
-                    </div>
-                </div>
-            </GenresProvider>
-        )
-    }
+    return (
+      <GenresProvider value={genresList}>
+        <div>
+          <Switch onRate={this.onRate} onSearch={this.onSearch} switchSearchRate={switchSearchRate} />
+          <SearchBar onSearchChange={this.onSearchChange} switchSearchRate={switchSearchRate} />
+          <MoviesList
+            movies={visibleMovies}
+            rating={ratingMovies}
+            loadingIndicator={loading}
+            error={error}
+            sendMoveRatingItem={this.sendMoveRatingItem}
+            switchSearchRate={switchSearchRate}
+            moviesListRating={moviesListRating}
+          />
+          <div className="pagination">
+            <Pagin defaultCurrent={1} current={Number(page)} total={50} onChange={this.onPaginClick} />
+          </div>
+        </div>
+      </GenresProvider>
+    );
+  }
 }
