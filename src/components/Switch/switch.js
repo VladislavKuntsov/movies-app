@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './switch.css';
 
-function Switch({onRate, onSearch, switchSearchRate}) {
-  
+function Switch({ onRate, onSearch, switchSearchRate }) {
   const classSwitch = {
     classNamesSearchSpan: !switchSearchRate ? 'active' : null,
     classNamesRatedSpan: switchSearchRate ? 'active' : null,
     classNameSearch: switchSearchRate ? 'sort-panel_search' : 'sort-panel_search active-border',
     classNameRated: !switchSearchRate ? 'sort-panel_rated' : 'sort-panel_rated active-border',
-  }; 
+  };
 
   return (
     <div className="container-sorting">

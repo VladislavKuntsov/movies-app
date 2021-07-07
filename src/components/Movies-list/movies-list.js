@@ -4,8 +4,15 @@ import PropTypes from 'prop-types';
 import MovieItem from '../Movie-item/movie-item';
 import './movies-list.css';
 
-function MoviesList({ movies, loadingIndicator, error, sendMoveRatingItem, switchSearchRate, moviesListRating, rating }) {
- 
+function MoviesList({
+  movies,
+  loadingIndicator,
+  error,
+  sendMoveRatingItem,
+  switchSearchRate,
+  moviesListRating,
+  rating,
+}) {
   const hasData = loadingIndicator || error;
 
   const errorMessage = error ? (

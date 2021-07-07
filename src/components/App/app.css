@@ -13,7 +13,8 @@ body {
 .pagination {
   display: block;
   text-align: center;
-  margin: 36px auto;
+  margin: 0 auto;
+  margin-bottom: 36px;
 }
 
 .ant-pagination-prev .ant-pagination-item-link,

@@ -5,8 +5,17 @@ import { Rate } from 'antd';
 import './movie-item.css';
 import { GenresConsumer } from '../App/app';
 
-function MovieItem({poster_path: posterPath, overview, rating, vote_average: voteAverage, release_date: releaseDate, genre_ids: genreIds, original_title: originalTitle, id, sendMoveRatingItem}) {
-
+function MovieItem({
+  poster_path: posterPath,
+  overview,
+  rating,
+  vote_average: voteAverage,
+  release_date: releaseDate,
+  genre_ids: genreIds,
+  original_title: originalTitle,
+  id,
+  sendMoveRatingItem,
+}) {
   const directoryPath = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2';
 
   const noMoviePoster = 'https://kinomaiak.ru/wp-content/uploads/2018/02/noposter.png';
@@ -19,7 +28,7 @@ function MovieItem({poster_path: posterPath, overview, rating, vote_average: vot
     if (typeof newRating === 'undefined') return 0;
 
     return newRating.rating;
-  }
+  };
 
   const setMovieGenre = (arrGenreID, arrGenresString) => {
     const arrGenres = [];
@@ -29,10 +38,9 @@ function MovieItem({poster_path: posterPath, overview, rating, vote_average: vot
     filteredGenres.forEach((item) => arrGenres.push(item.name));
 
     return arrGenres;
-  }
+  };
 
   const moveRatingItem = (value) => {
-
     sendMoveRatingItem(value, id);
   };
 
@@ -40,9 +48,10 @@ function MovieItem({poster_path: posterPath, overview, rating, vote_average: vot
     if (text.length <= 145) return text;
 
     return text.slice(0, text.indexOf(' ', length)) + ellipsis;
-  }
+  };
 
-  const сhangingDateFormat = (data) =>  new Date(data).toLocaleString('en-us', { month: 'long', year: 'numeric', day: 'numeric' });
+  const сhangingDateFormat = (data) =>
+    new Date(data).toLocaleString('en-us', { month: 'long', year: 'numeric', day: 'numeric' });
 
   const ratingColor = (data) => {
     if (data >= 0 && data <= 3) return 'vote-average-ratingRed';
@@ -51,7 +60,7 @@ function MovieItem({poster_path: posterPath, overview, rating, vote_average: vot
     if (data > 7) return 'vote-average-ratingGreen';
 
     return 'vote-average-ratingRed';
-  }
+  };
 
   const newRating = setRatingMovie(id, rating);
   const newText = minifyText(overview, 140);

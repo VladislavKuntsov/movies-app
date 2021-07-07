@@ -10,10 +10,6 @@
   margin-bottom: 35px;
 }
 
-.movieItem:nth-last-child(-n + 2) {
-  margin-bottom: 0px;
-}
-
 .movieItem:nth-child(2n) {
   margin-left: 30px;
 }

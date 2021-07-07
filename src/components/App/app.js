@@ -13,12 +13,11 @@ const MovieDBService = new SwapiServies();
 export const { Provider: GenresProvider, Consumer: GenresConsumer } = React.createContext();
 
 export default class App extends Component {
-  
   state = {
     guestSessionId: null,
     moviesList: [],
     totalResultsMovies: null,
-    totalResultsRatedMovies: null, 
+    totalResultsRatedMovies: null,
     moviesListRating: [],
     genresList: [],
     ratingMovies: [],
@@ -38,13 +37,13 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { term, page, switchSearchRate, guestSessionId} = this.state;
+    const { term, page, switchSearchRate, guestSessionId } = this.state;
 
-    if (term !== prevState.term || page !== prevState.page && !switchSearchRate) {
+    if (term !== prevState.term || (page !== prevState.page && !switchSearchRate)) {
       this.setMovies(term, page);
     }
 
-    if (term !== prevState.term || page !== prevState.page && switchSearchRate) {
+    if (term !== prevState.term || (page !== prevState.page && switchSearchRate)) {
       this.setMovieRated(guestSessionId, page);
     }
   }
@@ -59,7 +58,7 @@ export default class App extends Component {
     MovieDBService.getAllMovies(search, page)
       .then((body) => {
         const movies = body.results;
-        
+
         this.setState({
           moviesList: movies,
           totalResultsMovies: body.total_results,
@@ -71,8 +70,7 @@ export default class App extends Component {
 
   setMovieRated(guestSessionId, page) {
     MovieDBService.getMovieRated(guestSessionId, page).then((body) => {
-
-      this.setState({ 
+      this.setState({
         moviesListRating: body.results,
         totalResultsRatedMovies: body.total_results,
       });
@@ -164,17 +162,30 @@ export default class App extends Component {
   }
 
   render() {
-    const { moviesList, totalResultsMovies, totalResultsRatedMovies,  moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page} =
-      this.state;
+    const {
+      moviesList,
+      totalResultsMovies,
+      totalResultsRatedMovies,
+      moviesListRating,
+      genresList,
+      loading,
+      error,
+      switchSearchRate,
+      ratingMovies,
+      page,
+    } = this.state;
 
     const visibleMovies = switchSearchRate ? moviesListRating : moviesList;
 
-    const classNamePagination = (moviesList.length !== 0 && !switchSearchRate) || (ratingMovies.length !== 0 && switchSearchRate)? 'pagination' : 'hide'  
+    const classNamePagination =
+      (moviesList.length !== 0 && !switchSearchRate) || (ratingMovies.length !== 0 && switchSearchRate)
+        ? 'pagination'
+        : 'hide';
     const total = !switchSearchRate ? totalResultsMovies : totalResultsRatedMovies;
 
     return (
       <GenresProvider value={genresList}>
-        <div >
+        <div>
           <Switch onRate={this.onRate} onSearch={this.onSearch} switchSearchRate={switchSearchRate} />
           <SearchBar onSearchChange={this.onSearchChange} switchSearchRate={switchSearchRate} />
           <MoviesList
@@ -187,14 +198,15 @@ export default class App extends Component {
             moviesListRating={moviesListRating}
           />
           <div className={classNamePagination}>
-            <Pagin 
-            defaultCurrent={1} 
-            current={Number(page)} 
-            total={total} 
-            showSizeChanger={false}
-            pageSize={20} 
-            showQuickJumper
-            onChange={this.onPaginClick} />
+            <Pagin
+              defaultCurrent={1}
+              current={Number(page)}
+              total={total}
+              showSizeChanger={false}
+              pageSize={20}
+              showQuickJumper
+              onChange={this.onPaginClick}
+            />
           </div>
         </div>
       </GenresProvider>
