@@ -146,10 +146,10 @@
   .movieItem:nth-child(2n) {
     margin-left: 0;
   }
-
+ 
   .movieItem:nth-last-of-type(n + 2) {
     margin-bottom: 35px;
-  }
+  } 
 }
 
 @media (max-width: 525px) {
@@ -161,6 +161,10 @@
   .movieItem:nth-last-of-type(n + 2) {
     margin-bottom: 20px;
   }
+
+  .movieItem:nth-child(n) {
+     margin-bottom: 20px; 
+}
 
   .movieItem_content .movieItem_title {
     margin-left: 13px;

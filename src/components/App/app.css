@@ -48,6 +48,7 @@ body {
 @media (max-width: 525px) {
   .pagination {
     margin: 21px auto;
+    margin-top: 0;
   }
 }
 

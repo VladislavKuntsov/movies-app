@@ -15,7 +15,7 @@
 
 @media (max-width: 525px) {
   .movies-list {
-    margin: 10px auto 17px auto;
+    margin: 10px auto 0 auto;
   }
 }
 
