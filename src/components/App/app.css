@@ -2,12 +2,14 @@ html {
   box-sizing: border-box;
   font-family: 'TT Lakes', 'Comic', sans-serif;
   margin: 0 auto;
+  height: auto;
 }
 
 body {
   min-width: 420px;
   max-width: 1390px;
   margin: 0 auto;
+  height: auto;
 }
 
 .pagination {
