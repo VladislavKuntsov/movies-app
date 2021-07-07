@@ -19,9 +19,9 @@ export default class SwapiServies extends Component {
     return this.getResourse(`https://api.themoviedb.org/3/authentication/guest_session/new?api_key=${this.apiKey}`);
   }
 
-  getMovieRated(guestSessionId) {
+  getMovieRated(guestSessionId, page) {
     return this.getResourse(
-      `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}`
+      `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}&page=${page}`
     );
   }
 
@@ -34,10 +34,6 @@ export default class SwapiServies extends Component {
   getAllGenres() {
     return this.getResourse(`https://api.themoviedb.org/3/genre/movie/list?api_key=${this.apiKey}&language=en-US`);
   }
-
-  /*   getMoviesSearch() {
-    return this.getResourse()
-  } */
 
   async postResourse(url, options) {
     const response = await fetch(url, options);

@@ -13,9 +13,12 @@ const MovieDBService = new SwapiServies();
 export const { Provider: GenresProvider, Consumer: GenresConsumer } = React.createContext();
 
 export default class App extends Component {
+  
   state = {
     guestSessionId: null,
     moviesList: [],
+    totalResultsMovies: null,
+    totalResultsRatedMovies: null, 
     moviesListRating: [],
     genresList: [],
     ratingMovies: [],
@@ -35,10 +38,14 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { term, page } = this.state;
+    const { term, page, switchSearchRate, guestSessionId} = this.state;
 
-    if (term !== prevState.term || page !== prevState.page) {
+    if (term !== prevState.term || page !== prevState.page && !switchSearchRate) {
       this.setMovies(term, page);
+    }
+
+    if (term !== prevState.term || page !== prevState.page && switchSearchRate) {
+      this.setMovieRated(guestSessionId, page);
     }
   }
 
@@ -51,19 +58,24 @@ export default class App extends Component {
   setMovies(search, page) {
     MovieDBService.getAllMovies(search, page)
       .then((body) => {
-        const movies = body.results.slice(0, 6);
-
+        const movies = body.results;
+        
         this.setState({
           moviesList: movies,
+          totalResultsMovies: body.total_results,
           loading: false,
         });
       })
       .catch(this.onError);
   }
 
-  setMovieRated(guestSessionId) {
-    MovieDBService.getMovieRated(guestSessionId).then((body) => {
-      this.setState({ moviesListRating: body.results });
+  setMovieRated(guestSessionId, page) {
+    MovieDBService.getMovieRated(guestSessionId, page).then((body) => {
+
+      this.setState({ 
+        moviesListRating: body.results,
+        totalResultsRatedMovies: body.total_results,
+      });
     });
   }
 
@@ -78,12 +90,6 @@ export default class App extends Component {
       error: true,
       loading: false,
     });
-  };
-
-  ratedMovies = (page, moviesListRating) => {
-    const movie = moviesListRating.filter((item, index) => index >= page * 6 - 6 && index < page * 6);
-
-    return movie;
   };
 
   onSearchChange = (term) => {
@@ -101,6 +107,7 @@ export default class App extends Component {
 
   onPaginClick = (pages) => {
     this.setState({ page: String(pages) });
+    window.scrollTo(0, 0);
   };
 
   sendMoveRatingItem = (rating, movieId) => {
@@ -131,9 +138,10 @@ export default class App extends Component {
   };
 
   onRate = () => {
-    const { guestSessionId } = this.state;
+    const { guestSessionId, page } = this.state;
 
-    this.setMovieRated(guestSessionId);
+    this.setMovieRated(guestSessionId, page);
+
     this.setState({
       switchSearchRate: true,
       page: '1',
@@ -141,6 +149,10 @@ export default class App extends Component {
   };
 
   onSearch = () => {
+    const { term, page } = this.state;
+
+    this.setMovies(term, page);
+
     this.setState({
       switchSearchRate: false,
       page: '1',
@@ -152,13 +164,17 @@ export default class App extends Component {
   }
 
   render() {
-    const { moviesList, moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page } =
+    const { moviesList, totalResultsMovies, totalResultsRatedMovies,  moviesListRating, genresList, loading, error, switchSearchRate, ratingMovies, page} =
       this.state;
-    const visibleMovies = switchSearchRate ? this.ratedMovies(page, moviesListRating) : moviesList;
+
+    const visibleMovies = switchSearchRate ? moviesListRating : moviesList;
+
+    const classNamePagination = (moviesList.length !== 0 && !switchSearchRate) || (ratingMovies.length !== 0 && switchSearchRate)? 'pagination' : 'hide'  
+    const total = !switchSearchRate ? totalResultsMovies : totalResultsRatedMovies;
 
     return (
       <GenresProvider value={genresList}>
-        <div>
+        <div >
           <Switch onRate={this.onRate} onSearch={this.onSearch} switchSearchRate={switchSearchRate} />
           <SearchBar onSearchChange={this.onSearchChange} switchSearchRate={switchSearchRate} />
           <MoviesList
@@ -170,8 +186,15 @@ export default class App extends Component {
             switchSearchRate={switchSearchRate}
             moviesListRating={moviesListRating}
           />
-          <div className="pagination">
-            <Pagin defaultCurrent={1} current={Number(page)} total={50} onChange={this.onPaginClick} />
+          <div className={classNamePagination}>
+            <Pagin 
+            defaultCurrent={1} 
+            current={Number(page)} 
+            total={total} 
+            showSizeChanger={false}
+            pageSize={20} 
+            showQuickJumper
+            onChange={this.onPaginClick} />
           </div>
         </div>
       </GenresProvider>

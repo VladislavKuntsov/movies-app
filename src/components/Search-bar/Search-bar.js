@@ -1,30 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import './Search-bar.css';
 
-export default class SearchBar extends Component {
-  static defaultProps = {
-    onSearchChange: () => {},
-  };
+function SearchBar ({switchSearchRate, onSearchChange}) {
 
-  static propTypes = {
-    onSearchChange: PropTypes.func,
-    switchSearchRate: PropTypes.bool.isRequired,
-  };
-
-  onSearchChange = (event) => {
+  const onSearch = (event) => {
     const newTerm = event.target.value;
-
-    const { onSearchChange } = this.props;
 
     onSearchChange(newTerm);
   };
 
-  render() {
-    const { switchSearchRate } = this.props;
-
-    const classNameSearchBoxHide = !switchSearchRate ? 'search-box' : 'hide';
+  const classNameSearchBoxHide = !switchSearchRate ? 'search-box' : 'hide';
 
     return (
       <div className={classNameSearchBoxHide}>
@@ -33,10 +20,20 @@ export default class SearchBar extends Component {
             className="input-search"
             type="text"
             placeholder="Type to search..."
-            onChange={debounce(this.onSearchChange, 500)}
+            onChange={debounce(onSearch, 500)}
           />
         </form>
       </div>
     );
-  }
 }
+
+SearchBar.defaultProps = {
+  onSearchChange: () => {},
+};
+
+SearchBar.propTypes = {
+  onSearchChange: PropTypes.func,
+  switchSearchRate: PropTypes.bool.isRequired,
+};
+
+export default SearchBar;

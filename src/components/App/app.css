@@ -49,3 +49,7 @@ body {
     margin: 21px auto;
   }
 }
+
+.hide {
+  display: none;
+}
